@@ -30,8 +30,16 @@ function ensureSlash(inputPath, needsSlash) {
   }
 }
 
-const getPublicUrl = appPackageJson =>
-  envPublicUrl || require(appPackageJson).homepage;
+const getPublicUrl = appPackageJson => {
+  let def_prop = 'homepage';
+  let argv = process.argv.slice(2);
+  for (let i = 0; i < argv.length; i++) {
+    if (argv[i] === '--homepage') {
+      def_prop = 'homepage_' + argv[i + 1];
+    }
+  }
+  return envPublicUrl || require(appPackageJson)[def_prop];
+}
 
 // We use `PUBLIC_URL` environment variable or "homepage" field to infer
 // "public path" at which the app is served.
